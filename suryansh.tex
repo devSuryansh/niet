@@ -1,0 +1,430 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=2.4cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{parskip}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{eso-pic}
+
+% ────────────────────────────────────────
+%   Code Styling (Improved & Clean)
+% ────────────────────────────────────────
+\definecolor{codebg}{RGB}{245, 247, 250}
+\definecolor{codeblue}{RGB}{37, 99, 235}
+\definecolor{codegreen}{RGB}{22, 163, 74}
+\definecolor{codered}{RGB}{220, 38, 38}
+
+\lstset{
+    language=Python,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen},
+    stringstyle=\color{codered},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=8pt,
+    breaklines=true,
+    breakatwhitespace=true,
+    frame=single,
+    rulecolor=\color{gray!40},
+    tabsize=4,
+    showstringspaces=false
+}
+
+% Color Definitions
+\definecolor{titleblue}{RGB}{30, 58, 138}
+\definecolor{accent}{RGB}{59, 130, 246}
+\definecolor{graydark}{RGB}{75, 85, 99}
+
+% Section Formatting
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{titleblue}}
+  {}
+  {0em}
+  {}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{accent}}
+  {}
+  {0em}
+  {\makebox[0pt][l]{\color{gray!30}\rule[-0.35ex]{1.1cm}{2.2pt}}\enspace}
+
+% % Header
+% \pagestyle{fancy}
+% \fancyhf{}
+% \fancyhead[L]{\small\color{graydark} Data Analytics}
+% \fancyhead[R]{\small\color{graydark} Page \thepage\ of \pageref{LastPage}}
+% \renewcommand{\headrulewidth}{0.5pt}
+% \renewcommand{\headrule}{\color{gray!20}\hrule}
+
+% ────────────────────────────────────────
+%   Footer Only (No Header)
+% ────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}                        % Clear all header and footer fields
+\fancyfoot[C]{\thepage}           % Page number centered in footer
+\renewcommand{\headrulewidth}{0pt} % Remove header line
+\renewcommand{\footrulewidth}{0pt} % No footer line
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.85ex plus 0.4ex minus 0.3ex}
+\setlist[enumerate]{leftmargin=*, label=\textbf{\arabic*.}}
+
+% ────────────────────────────────────────
+%   Double Page Border (Fixed Version)
+% ────────────────────────────────────────
+\usepackage{eso-pic}
+
+\AddToShipoutPictureBG{
+\begin{tikzpicture}[remember picture,overlay]
+
+    % Outer Border
+    \draw[black, line width=0.4pt]
+        ($(current page.north west)+(0.6cm,-0.6cm)$)
+        rectangle
+        ($(current page.south east)+(-0.6cm,0.6cm)$);
+
+    % Inner Border
+    \draw[black, line width=0.3pt]
+        ($(current page.north west)+(0.75cm,-0.75cm)$)
+        rectangle
+        ($(current page.south east)+(-0.75cm,0.75cm)$);
+
+\end{tikzpicture}
+}
+
+% \AddToShipoutPictureBG{
+% \begin{tikzpicture}[remember picture,overlay]
+
+%     % Outer Border (near page edge)
+%     \draw[line width=0.4pt]
+%         ($(current page.north west)+(0.6cm,-0.6cm)$)
+%         rectangle
+%         ($(current page.south east)+(-0.6cm,0.6cm)$);
+
+%     % Inner Border (slightly inside outer)
+%     \draw[line width=0.3pt]
+%         ($(current page.north west)+(0.75cm,-0.75cm)$)
+%         rectangle
+%         ($(current page.south east)+(-0.75cm,0.75cm)$);
+
+% \end{tikzpicture}
+% }
+
+\begin{document}
+
+% ──────────────────────────────
+% Title Block
+% ──────────────────────────────
+\begin{center}
+\vspace*{1.4cm}
+
+{\LARGE\bfseries\color{titleblue} Data Analytics}\\[5mm]
+{\Large\bfseries Assignment 1}\\[4mm]
+{\large\color{accent} Subject Code: BCSDS0651 \quad$\vert$\quad Even Semester 2025-26}\\[1.2cm]
+
+\begin{tabularx}{\textwidth}{>{\raggedleft\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}X}
+\toprule[1pt]
+\addlinespace[0.6em]
+\textbf{\color{titleblue} Name} & Suryansh Singh \\
+\textbf{\color{titleblue} Roll No.} & 2301330100208 \\
+\textbf{\color{titleblue} Branch} & Computer Science and Engineering \\
+\textbf{\color{titleblue} Semester} & 6 \\
+\textbf{\color{titleblue} Section} & C \\
+\textbf{\color{titleblue} Submitted to} & Ms. Ayushi Gupta \\
+\addlinespace[0.6em]
+\bottomrule[1pt]
+\end{tabularx}
+\end{center}
+
+\newpage
+
+% ──────────────────────────────
+\section*{1. Write a Python program to compute Central Tendency and Dispersion Measures}
+
+\subsection*{Mathematical Formulas}
+
+Mean:
+\[
+\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i
+\]
+
+Sample Variance:
+\[
+s^2 = \frac{1}{n-1} \sum_{i=1}^{n} (x_i - \bar{x})^2
+\]
+
+Standard Deviation:
+\[
+s = \sqrt{s^2}
+\]
+
+\subsection*{Python Program}
+
+\begin{lstlisting}
+import statistics
+
+data = [10, 20, 20, 30, 40, 50]
+
+# Central Tendency
+mean_val = statistics.mean(data)
+median_val = statistics.median(data)
+mode_val = statistics.multimode(data)
+
+# Dispersion (Sample)
+variance_val = statistics.variance(data)
+std_dev_val = statistics.stdev(data)
+
+print("Mean:", mean_val)
+print("Median:", median_val)
+print("Mode:", mode_val)
+print("Variance:", variance_val)
+print("Standard Deviation:", std_dev_val)
+\end{lstlisting}
+
+% ──────────────────────────────
+\section*{2. Study of Python Basic Libraries: Statistics, Math, NumPy and SciPy}
+
+\subsection*{Statistics Library}
+Provides built-in functions for mean, median, variance, and standard deviation.
+
+\subsection*{Math Library}
+Used for mathematical operations such as:
+\begin{itemize}
+\item \texttt{math.sqrt()}
+\item \texttt{math.log()}
+\item \texttt{math.factorial()}
+\end{itemize}
+
+\subsection*{NumPy}
+Efficient numerical computations using arrays.
+
+\begin{lstlisting}
+import numpy as np
+
+arr = np.array([10, 20, 20, 30, 40, 50])
+
+print("NumPy Mean:", np.mean(arr))
+print("NumPy Variance:", np.var(arr))
+\end{lstlisting}
+
+\subsection*{SciPy}
+Used for advanced statistical functions.
+
+\begin{lstlisting}
+from scipy import stats
+
+print("SciPy Mode:", stats.mode(arr, keepdims=True))
+\end{lstlisting}
+
+% ──────────────────────────────
+\section*{3. Study of Python Libraries for ML Applications: Pandas and Matplotlib}
+
+\subsection*{Pandas}
+Used for structured data manipulation.
+
+\begin{lstlisting}
+import pandas as pd
+
+df = pd.DataFrame({"Values": arr})
+print(df.describe())
+\end{lstlisting}
+
+\subsection*{Matplotlib}
+Used for visualization.
+
+\begin{lstlisting}
+import matplotlib.pyplot as plt
+
+plt.hist(arr)
+plt.title("Histogram of Data")
+plt.xlabel("Values")
+plt.ylabel("Frequency")
+plt.show()
+\end{lstlisting}
+
+% ──────────────────────────────
+\section*{4. Write a Python program to implement Simple Linear Regression}
+
+\subsection*{Mathematical Model}
+
+\[
+y = \beta_0 + \beta_1 x
+\]
+
+\[
+\beta_1 =
+\frac{\sum (x_i - \bar{x})(y_i - \bar{y})}
+{\sum (x_i - \bar{x})^2}
+\]
+
+\[
+\beta_0 = \bar{y} - \beta_1 \bar{x}
+\]
+
+\subsection*{Python Program}
+
+\begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.array([1, 2, 3, 4, 5])
+y = np.array([2, 4, 5, 4, 5])
+
+x_mean = np.mean(x)
+y_mean = np.mean(y)
+
+beta_1 = np.sum((x - x_mean) * (y - y_mean)) \
+         / np.sum((x - x_mean)**2)
+
+beta_0 = y_mean - beta_1 * x_mean
+
+print("Intercept:", beta_0)
+print("Slope:", beta_1)
+
+y_pred = beta_0 + beta_1 * x
+
+plt.scatter(x, y)
+plt.plot(x, y_pred)
+plt.title("Simple Linear Regression")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.show()
+\end{lstlisting}
+
+% ──────────────────────────────
+\section*{5. Load a Sample Dataset to Build a Predictive Model in Python}
+
+\subsection*{Problem Statement}
+\begin{enumerate}
+\item Import Python Libraries
+\item Read the Dataset
+\end{enumerate}
+
+\subsection*{Solution}
+
+\begin{lstlisting}
+# 1. Import Required Libraries
+import pandas as pd
+import numpy as np
+from sklearn.datasets import load_iris
+
+# 2. Load Sample Dataset (Iris Dataset)
+iris = load_iris()
+
+# Convert to DataFrame
+df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+df['target'] = iris.target
+
+print(df.head())
+\end{lstlisting}
+
+% ──────────────────────────────
+\section*{6. Explore the Dataset and Perform Feature Selection}
+
+\subsection*{Problem Statement}
+\begin{enumerate}
+\item Explore the Dataset
+\item Perform Feature Selection
+\end{enumerate}
+
+\subsection*{Solution}
+
+\begin{lstlisting}
+# Dataset Exploration
+print("Dataset Shape:", df.shape)
+print(df.info())
+print(df.describe())
+
+# Feature Selection
+X = df.drop("target", axis=1)
+y = df["target"]
+
+print("Selected Features:")
+print(X.columns)
+\end{lstlisting}
+
+% ──────────────────────────────
+\section*{7. Build the Model and Evaluate Performance}
+
+\subsection*{Problem Statement}
+\begin{enumerate}
+\item Build the Model
+\item Evaluate the Model's Performance
+\end{enumerate}
+
+\subsection*{Solution}
+
+\begin{lstlisting}
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+# Split Data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42
+)
+
+# Build Model
+model = LogisticRegression(max_iter=200)
+model.fit(X_train, y_train)
+
+# Predictions
+y_pred = model.predict(X_test)
+
+# Evaluation
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Classification Report:\n", classification_report(y_test, y_pred))
+\end{lstlisting}
+
+% ──────────────────────────────
+\section*{8. Installing and Setting Up Python Environment}
+
+\subsection*{Problem Statement}
+\begin{enumerate}
+\item Installing Pandas and Other Dependent Python Modules
+\item Setting Up and Using Jupyter Notebooks
+\end{enumerate}
+
+\subsection*{Solution}
+
+\textbf{Step 1: Install Python}
+
+Download Python from the official website and verify installation:
+
+\begin{lstlisting}
+python --version
+\end{lstlisting}
+
+\textbf{Step 2: Install Required Libraries}
+
+\begin{lstlisting}
+pip install numpy pandas matplotlib scipy scikit-learn
+\end{lstlisting}
+
+\textbf{Step 3: Install Jupyter Notebook}
+
+\begin{lstlisting}
+pip install notebook
+\end{lstlisting}
+
+\textbf{Step 4: Launch Jupyter Notebook}
+
+\begin{lstlisting}
+jupyter notebook
+\end{lstlisting}
+
+Jupyter Notebook opens in a web browser where Python code can be executed interactively.
+
+\end{document}
